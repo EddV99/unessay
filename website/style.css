@@ -1,0 +1,74 @@
+body {
+    background-color: purple;
+}
+img {
+    width: 100%;
+}
+div{
+    margin: 7px;
+}
+
+.top-flex{
+    display: flex;
+    flex-direction: row;
+}
+.top-flex> *{
+    flex: 1;
+}
+
+.tf-flex1{
+    display: flex;
+    flex-direction: column;
+}
+.tf-flex1> *{
+    flex: 1;
+}
+.tf-flex1>.top{
+    background-color: red;
+}
+.tf-flex1>.mid{
+    background-color: green;
+}
+.tf-flex1>.bot{
+    background-color: blue;
+}
+
+
+.mid-flex{
+    display: flex;
+    flex-direction: row;
+}
+.mid-flex> *{
+    flex: 1;
+}
+
+.mf-flex1{
+    display: flex;
+    flex-direction: column;
+}
+.mf-flex1> *{
+    flex: 1;
+}
+.mf-flex1>.top{
+    background-color: red;
+}
+.mf-flex1>.mid{
+    background-color: green;
+}
+
+
+
+.bot-flex{
+    display: flex;
+    flex-direction: column;
+}
+
+.bot-flex>.top{
+    background-color: blue;
+}
+.bot-flex>.mid{
+}
+canvas{
+    width: 100%;
+    height: 100%;
+}
