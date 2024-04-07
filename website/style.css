@@ -61,12 +61,16 @@ div{
 .bot-flex{
     display: flex;
     flex-direction: column;
+    align-items: center;
 }
 
 .bot-flex>.top{
+    flex: 1; 
     background-color: blue;
 }
 .bot-flex>.mid{
+    width: 700px; 
+    height: 400px; 
 }
 canvas{
     width: 100%;

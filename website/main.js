@@ -1,5 +1,5 @@
 import './style.css'
-
+//import * as PIXI from 'pixijs';
 import * as THREE from 'three';
 import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls';
 
@@ -7,17 +7,17 @@ const FOV = 65;
 const NEAR = 0.1;
 const FAR = 100;
 
-const canvas = document.getElementById('game-canvas');
+let canvas = document.getElementById('game-canvas');
 
 //const WIDTH = canvas.clientWidth * window.devicePixelRatio;
 //const HEIGHT = canvas.clientHeight * window.devicePixelRatio;
-const WIDTH = window.innerWidth;
+let WIDTH = canvas.clientWidth;
 //const HEIGHT = window.innerHeight;
-const HEIGHT = 1000;
+let HEIGHT = canvas.clientHeight;
 
 const scene = new THREE.Scene();
 
-const camera = new THREE.PerspectiveCamera(FOV, WIDTH / HEIGHT, NEAR, FAR);
+let camera = new THREE.PerspectiveCamera(FOV, WIDTH / HEIGHT, NEAR, FAR);
 
 const renderer = new THREE.WebGLRenderer({
     canvas,
@@ -58,3 +58,12 @@ function animate(){
 }
 
 animate();
+
+
+window.onresize = function(event){
+    WIDTH = canvas.clientWidth;
+    HEIGHT = canvas.clientHeight;
+    camera.aspect(WIDTH / HEIGHT);
+    camera.updateProjectionMatrix();
+    renderer.setSize(WIDTH, HEIGHT);
+};
