@@ -1,69 +1,19 @@
-import './style.css'
-//import * as PIXI from 'pixijs';
-import * as THREE from 'three';
-import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls';
+// Create the application helper and add its render target to the page
 
-const FOV = 65;
-const NEAR = 0.1;
-const FAR = 100;
+const canvas = document.getElementById('pixi-canvas');
 
-let canvas = document.getElementById('game-canvas');
+const app = new PIXI.Application();
+await app.init({ background: '#ff00ff', autoResize: true, view: canvas})
+//document.body.appendChild(app.canvas);
 
-//const WIDTH = canvas.clientWidth * window.devicePixelRatio;
-//const HEIGHT = canvas.clientHeight * window.devicePixelRatio;
-let WIDTH = canvas.clientWidth;
-//const HEIGHT = window.innerHeight;
-let HEIGHT = canvas.clientHeight;
+// Create the sprite and add it to the stage
+await PIXI.Assets.load('public/stickman-pixiJSMovie.png');
+let sprite = PIXI.Sprite.from('public/stickman-pixiJSMovie.png');
+app.stage.addChild(sprite);
 
-const scene = new THREE.Scene();
-
-let camera = new THREE.PerspectiveCamera(FOV, WIDTH / HEIGHT, NEAR, FAR);
-
-const renderer = new THREE.WebGLRenderer({
-    canvas,
+// Add a ticker callback to move the sprite back and forth
+let elapsed = 0.0;
+app.ticker.add((ticker) => {
+    elapsed += ticker.deltaTime;
+    sprite.x = 100.0 + Math.cos(elapsed/50.0) * 100.0;
 });
-
-renderer.setPixelRatio(window.devicePixelRatio);
-renderer.setSize(WIDTH, HEIGHT);
-camera.position.setZ(30);
-
-const geometry = new THREE.TorusGeometry(10, 3, 16, 100);
-const material = new THREE.MeshStandardMaterial({color: 0XC28300});
-const torus = new THREE.Mesh(geometry, material);
-
-const pointLight = new THREE.PointLight(0xffffff);
-pointLight.position.set(0,0,20);
-
-
-const lightHelper = new THREE.PointLightHelper(pointLight);
-const gridHelper = new THREE.GridHelper(200, 50);
-const ambientLight = new THREE.AmbientLight(0xffffff);
-//const controls = new OrbitControls(camera, renderer.domElement);
-
-//scene.add(lightHelper);
-//scene.add(gridHelper);
-scene.add(pointLight);
-scene.add(ambientLight);
-scene.add(torus);
-
-
-function animate(){
-    requestAnimationFrame(animate); 
-    torus.rotation.x += 0.01;
-    torus.rotation.z += 0.01;
-    torus.rotation.y += 0.001;
-
-//     controls.update();
-    renderer.render(scene, camera);
-}
-
-animate();
-
-
-window.onresize = function(event){
-    WIDTH = canvas.clientWidth;
-    HEIGHT = canvas.clientHeight;
-    camera.aspect(WIDTH / HEIGHT);
-    camera.updateProjectionMatrix();
-    renderer.setSize(WIDTH, HEIGHT);
-};
