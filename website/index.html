@@ -4,41 +4,152 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="stylesheet" type="text/css" href="style.css">
-        <script src="pixi.js"></script>
+        <script src="https://pixijs.download/release/pixi.js"></script>
         <title>Unessay</title>
     </head>
     <body>
-        <div class="top-flex">
-            <div>
-                <img src="public/robot.jpg" alt="The Robot, Sonny, from the
-                movie &quot;I, Robot&quot;">
-            </div>
-            <div class="tf-flex1">
-                <div class="top">aa</div>
-                <div class="mid">b</div>
-                <div class="bot">c</div>
-            </div>
+        <div class = "banner">
+            AI in Fiction
+            <img src="public/cat.png" style="width: 50px; height: 50px;
+            padding-left: 20px"></img>
         </div>
 
-        <div class="mid-flex">
-            <div>
-                <img src="public/robot.jpg" alt="The Robot, Sonny, from the
-                movie &quot;I, Robot&quot;">
-            </div>
-            <div class="mf-flex1">
-                <div class="top">a</div>
-                <div class="mid">b</div>
-            </div>
+        <div class="text">
+            <h2>What we see in fiction is happening in real life!</h2>
+            Many AI in pictured in fiction is starting to to appear in
+            meatspace and people are just starting to notice. An example is from
+            the book, "Catfishing on CatNet: A Novel" by Naomi Kritzer. In that
+            book they have a fictional character that gains the ability to
+            think, like stuff (cats), and many other things. <br><br>
+
+            We have something similar today! It doesn't have a cool name like
+            CheShire Cat or have a conscious (yet), but it can do cool stuff
+            like generating a 
+
+            <h2>Why is AI commonly potrayed as evil?</h2>
+
+            <h2>Will we ever see AI with a conscious?</h2>
         </div>
 
-        <div class="bot-flex">
-            <div class="top">
-                kj
+        <div class="mid">
+            <div class="text">
+                <h2>An Idea for a game</h2>
+                While playing the clicker game Universial Paperclips, it got me
+                thinking of wanting to make a AI themed game. <br><br> The game
+                would be simple, in that all you would do is click stuff on the
+                screen, but you would have to guess who/what is an AI from the
+                moving characters. I envisioned many character designs,
+                animations, and small details that would give the player a hint
+                that they might actually be an AI character in this game world.
+                <br><br>
+                Drawing art, designing a world, and making the game takes a lot
+                of time, so I've just made a quick and simple demo of what the
+                game might look like.
             </div>
-            <div class="mid">
-                <canvas id="pixi-canvas"> </canvas>
-            </div>
+            <canvas id="pixi-canvas" style="width: 60%; height: 200px;"> </canvas>
         </div>
-        <script type="module" src="main.js"></script>
+        <script type="module">
+            const canvas = document.getElementById('pixi-canvas');
+            let width = canvas.clientWidth;
+            const app = new PIXI.Application();
+            await app.init({ background: '#ffffff', autoResize: true, canvas: canvas})
+            
+            
+            await PIXI.Assets.load('stickman.png');
+
+            let players = [];
+            
+            let walkspeed = 0.2;
+            let pause = false;
+            app.ticker.add((ticker) => {
+                if(!pause){
+                  if( getRandom(1000) <= 5){
+                     createPlayer();
+                  }
+                 players.forEach((p) => {
+                     p.x += walkspeed;
+                     if(p.x > width){
+                         players.splice(players.indexOf(p), 1);
+                        app.stage.removeChild(p);
+                        p.destroy(true);
+                     }
+                 });
+                }
+
+            });
+
+            async function createPlayer(){
+                // Create the sprite and add it to the stage
+                let playerData = {
+                    frames: { 
+                        walk1: { 
+                            frame: { x: 0, y: 0, w: 32, h: 32 },
+                            sourceSize: {w: 32, h: 32 },
+                            spriteSourceSize: {x: 0, y: 0, w: 32, h: 32 }
+                        }, 
+                        walk2: { 
+                            frame: { x: 32, y: 0, w: 32, h: 32 },
+                            sourceSize: {w: 32, h: 32 },
+                            spriteSourceSize: {x: 0, y: 0, w: 32, h: 32 }
+                        }, 
+                        walk3: { 
+                            frame: { x: 0, y: 32, w: 32, h: 32 },
+                            sourceSize: {w: 32, h: 32 },
+                            spriteSourceSize: {x: 0, y: 0, w: 32, h: 32 }
+                        }, 
+                        walk4: { 
+                            frame: { x: 32, y: 32, w: 32, h: 32 },
+                            sourceSize: {w: 32, h: 32 },
+                            spriteSourceSize: {x: 0, y: 0, w: 32, h: 32 }
+                        }, 
+                        walk5: { 
+                            frame: { x: 0, y: 64, w: 32, h: 32 },
+                            sourceSize: {w: 32, h: 32 },
+                            spriteSourceSize: {x: 0, y: 0, w: 32, h: 32 }
+                        }, 
+                    },
+                    meta: {
+                        image:'stickman.png',
+                        format: 'RGBA8888',
+                        size: {w: 64, h: 96 },
+                        scale: 1
+                    },
+                    animations: {
+                        walk: ["walk1","walk2","walk3","walk4","walk5"]
+                    }
+                };
+                const spritesheet = new PIXI.Spritesheet(
+                    PIXI.Texture.from('stickman.png'),
+                    playerData
+                );
+
+                await spritesheet.parse();
+
+                const anim = new PIXI.AnimatedSprite(spritesheet.animations.walk);
+                anim.y = getRandom(400);
+                const s = 128;
+                anim.width = s;
+                anim.height = s;
+
+                anim.on('pointerdown', (event) => {
+                players.splice(players.indexOf(anim), 1);
+                app.stage.removeChild(anim);
+                anim.destroy(true);
+                });
+                anim.eventMode = 'static';
+
+
+                players.push(anim);
+
+                anim.animationSpeed = 0.12;
+                anim.play();
+
+                app.stage.addChild(anim);
+            }
+
+            function getRandom(max){
+                return Math.floor(Math.random() * max);
+            }
+        </script>
     </body>
 </html>
